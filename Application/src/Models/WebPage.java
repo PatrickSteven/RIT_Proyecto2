@@ -20,6 +20,13 @@ public class WebPage {
         this.enlace = enlace;
     }
 
+    public WebPage(String titulo, String enlace) {
+        this.titulo = titulo;
+        this.enlace = enlace;
+    }
+    
+    
+
     public String getTexto() {
         return texto;
     }

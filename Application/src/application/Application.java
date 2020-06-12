@@ -22,7 +22,9 @@ public class Application {
         
         try {
             String texto = wb.readFile("C:\\ITCR\\unHTML.txt");
-            wb.parse(texto);
+            String cleanText = "";
+            cleanText = wb.parse(texto);
+            wb.displayTokenUsingStopAnalyzer(cleanText);
         } catch (Exception ex) {
             
         }

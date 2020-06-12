@@ -30,6 +30,14 @@ import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.util.Constants;
 import org.apache.lucene.analysis.util.ResourceLoader;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.util.AttributeImpl;
+import org.apache.lucene.analysis.Analyzer; 
+import org.apache.lucene.analysis.LowerCaseFilter; 
+import org.apache.lucene.analysis.StopFilter; 
+import org.apache.lucene.analysis.TokenStream; 
+import org.apache.lucene.analysis.WordlistLoader; 
+//import org.apache.lucene.analysis.standard.StandardFilter; 
+import org.apache.lucene.analysis.standard.StandardTokenizer; 
 
 
 public class WebPageManager {
@@ -45,13 +53,7 @@ public String readFile(String fileName)throws Exception{
     return data; 
   } 
     
-    public String parseHTML(File html, String key){
-    
-        
-        return "";
-    }
-    
-    public void parse(String htmlText){
+    public String parse(String htmlText){
 
           Document doc = Jsoup.parse(htmlText);
           String title = doc.title();
@@ -77,9 +79,10 @@ public String readFile(String fileName)throws Exception{
           //System.out.println("title " + title);
           //System.out.println("a " + aText);
           //System.out.println("h " + hText);
-          System.out.println("body " + body);
+          //System.out.println("body " + body);
           newBody = removeNumbers(body);
           newBody = makeItSpanish(newBody);
+          return newBody;
           
     }
     
@@ -88,7 +91,7 @@ public String readFile(String fileName)throws Exception{
         String[] newText = text.replaceAll("\\w*\\d\\w* *", "").split("  +");
         String cleanText = String.join("", newText);
         
-        System.out.println(cleanText);               
+        //System.out.println(cleanText);               
         return cleanText;
     }
     
@@ -97,7 +100,7 @@ public String readFile(String fileName)throws Exception{
         String[] newText = text.replaceAll("[^A-Za-zÑñ\\s]", "").split("  +");
         String cleanText = String.join("", newText);
         
-        System.out.println(cleanText);
+        //System.out.println(cleanText);
         return cleanText;
     }
     
@@ -106,7 +109,7 @@ public String readFile(String fileName)throws Exception{
         stopSet.addAll(Arrays.asList(stopWords));
         return stopSet;
 }
-    
+ /* 
 public class LuceneConstants {
    public static final String CONTENTS = "contents";
    public static final String FILE_NAME = "filename";
@@ -121,10 +124,12 @@ public class LuceneConstants {
       Analyzer analyzer = new StopAnalyzer(stopWordsSet);
       TokenStream tokenStream = analyzer.tokenStream(
       LuceneConstants.CONTENTS, new StringReader(text));
-      CharTermAttribute term = tokenStream.addAttribute(CharTermAttribute.class);
+      AttributeImpl term = tokenStream.addAttribute(AttributeImpl.class);
       while(tokenStream.incrementToken()) {
-         System.out.print("[" + term.toString() + "] ");
+         System.out.print("[" + term.reflectAsString(true) + "] ");
       }
    }
+*/
+
 }
 

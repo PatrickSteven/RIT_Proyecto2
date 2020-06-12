@@ -6,6 +6,7 @@
 package application;
 
 import Models.WebPageManager;
+import java.io.IOException;
 
 /**
  *
@@ -16,8 +17,9 @@ public class Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-                WebPageManager wb = new WebPageManager();
+    public static void main(String[] args) throws IOException {
+        WebPageManager wb = new WebPageManager();
+        
         try {
             String texto = wb.readFile("C:\\ITCR\\unHTML.txt");
             wb.parse(texto);
@@ -25,5 +27,4 @@ public class Application {
             
         }
     }
-    
 }

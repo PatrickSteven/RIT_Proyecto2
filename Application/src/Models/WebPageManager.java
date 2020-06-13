@@ -39,14 +39,21 @@ import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter; 
 import org.apache.lucene.analysis.TokenStream; 
 import org.apache.lucene.analysis.WordlistLoader; 
-//import org.apache.lucene.analysis.standard.StandardFilter; 
 import org.apache.lucene.analysis.standard.StandardTokenizer; 
+import org.apache.lucene.util.AttributeFactory;
 
 
 public class WebPageManager {
       
     
     public ArrayList<WebPage> getWebPages(File dataFile){
+        
+        try {
+            String htmlText = readFile("C:\\ITCR\\unHTML.txt");
+            parse(htmlText);
+        } catch (IOException ex) {
+            
+        }
         return new ArrayList<>(); //Es solo poder llamar al metodo //Usted implementelo bien
     }
     
@@ -130,48 +137,43 @@ public class WebPageManager {
     
     public String removeNumbers(String text){
     
-        String[] newText = text.replaceAll("\\w*\\d\\w* *", "").split("  +");
+        String[] newText = text.replaceAll("\\w*\\d\\w*", "").split("  +");
         String cleanText = String.join("", newText);
         
         //System.out.println(cleanText);               
         return cleanText;
     }
     
+    public String replaceAccents(String cadena) {
+    return cadena.replace("Á", "A")
+            .replace("É", "E")
+            .replace("Í", "I")
+            .replace("Ó", "O") 
+            .replace("Ú", "U")
+            .replace("á", "a")
+            .replace("é", "e")
+            .replace("í", "i")
+            .replace("ó", "o")
+            .replace("ú", "u")
+            .replace(".", " ")
+            .replace(",", " ")
+            .replace(":", " ")
+            .replace("(", " ")
+            .replace(")", " ");
+}
+    
     public String makeItSpanish(String text){
     
-        String[] newText = text.replaceAll("[^A-Za-zÑñ\\s]", "").split("  +");
+        text = replaceAccents(text);
+        String[] newText = text.replaceAll("\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+|[^A-Za-zÑñ\\s]+", "").split("  +  ");
         String cleanText = String.join("", newText);
         
-        //System.out.println(cleanText);
+        System.out.println(cleanText);
         return cleanText;
     }
     
-    public static CharArraySet makeStopSet(String[] stopWords, boolean ignoreCase) {
-        CharArraySet stopSet = new CharArraySet(stopWords.length, ignoreCase);
-        stopSet.addAll(Arrays.asList(stopWords));
-        return stopSet;
-}
- /* 
-public class LuceneConstants {
-   public static final String CONTENTS = "contents";
-   public static final String FILE_NAME = "filename";
-   public static final String FILE_PATH = "filepath";
-   public static final int MAX_SEARCH = 10;
-}
+
+
+
     
-    public void displayTokenUsingStopAnalyzer(String text) throws IOException{
-      
-      String[] stopList = {"en, a, ante"};
-      CharArraySet stopWordsSet = makeStopSet(stopList, true);
-      Analyzer analyzer = new StopAnalyzer(stopWordsSet);
-      TokenStream tokenStream = analyzer.tokenStream(
-      LuceneConstants.CONTENTS, new StringReader(text));
-      AttributeImpl term = tokenStream.addAttribute(AttributeImpl.class);
-      while(tokenStream.incrementToken()) {
-         System.out.print("[" + term.reflectAsString(true) + "] ");
-      }
-   }
-*/
-
 }
-

@@ -65,6 +65,7 @@ public class Searcher {
     }
     
     public TopDocs DoQuery(String queryString) throws ParseException, IOException{
+        //Query string -> query syntax 
         this.query = queryParser.parse(queryString);
         return indexSearcher.search(query, maxDocs);
     }

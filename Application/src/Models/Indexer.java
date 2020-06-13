@@ -59,8 +59,13 @@ public class Indexer {
             doc.add(new TextField(WebPageConstants.ENCAB, webPage.getEncab(), Field.Store.YES));
             doc.add(new TextField(WebPageConstants.TITULO, webPage.getTitulo(), Field.Store.YES));
 
-            //Field that is stored as a single string, one token.
-            doc.add(new StringField(WebPageConstants.ENLACE, "", Field.Store.NO));
+            //Field that is a single string, one token. No Store
+            doc.add(new StringField(WebPageConstants.ENLACE, webPage.getEnlace(), Field.Store.NO));
+            
+            //Initial and end position of the Document in the Collection .txt file
+            //Int to String
+            doc.add(new StringField(WebPageConstants.INITPOS, String.valueOf(webPage.getInitialPosition()), Field.Store.NO));
+            doc.add(new StringField(WebPageConstants.ENDPOS,  String.valueOf(webPage.getEndPosition()), Field.Store.NO));
             
             //Add the document in the index
                this.indexWriter.addDocument(doc);

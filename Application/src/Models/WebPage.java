@@ -11,21 +11,22 @@ public class WebPage {
     private String encab;
     private String titulo;
     private String enlace;
+    
+    private int initialPosition;
+    private int endPosition;
 
-    public WebPage(String texto, String ref, String encab, String titulo, String enlace) {
+    public WebPage(String texto, String ref, String encab, String titulo, String enlace, int initialPosition, int endPosition) {
         this.texto = texto;
         this.ref = ref;
         this.encab = encab;
         this.titulo = titulo;
         this.enlace = enlace;
+        this.initialPosition = initialPosition;
+        this.endPosition = endPosition;
     }
 
-    public WebPage(String titulo, String enlace) {
-        this.titulo = titulo;
-        this.enlace = enlace;
+    public WebPage() {
     }
-    
-    
 
     public String getTexto() {
         return texto;
@@ -66,5 +67,24 @@ public class WebPage {
     public void setEnlace(String enlace) {
         this.enlace = enlace;
     }
+
+    public int getInitialPosition() {
+        return initialPosition;
+    }
+
+    public void setInitialPosition(int initialPosition) {
+        this.initialPosition = initialPosition;
+    }
+
+    public int getEndPosition() {
+        return endPosition;
+    }
+
+    public void setEndPosition(int endPosition) {
+        this.endPosition = endPosition;
+    }
+    
+    
+    
     
 }

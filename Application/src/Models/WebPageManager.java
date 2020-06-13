@@ -1,5 +1,6 @@
 
 package Models;
+import static Models.FileManager.FileManager.readFile;
 import java.nio.file.*;; 
 import java.io.File;
 import java.io.StringReader;
@@ -12,6 +13,8 @@ import java.io.IOException;
 import java.io.Reader; 
 import java.util.HashSet; 
 import java.util.Set; 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -41,17 +44,56 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 
 
 public class WebPageManager {
+      
     
     public ArrayList<WebPage> getWebPages(File dataFile){
         return new ArrayList<>(); //Es solo poder llamar al metodo //Usted implementelo bien
     }
     
-public String readFile(String fileName)throws Exception{
-  
-    String data; 
-    data = new String(Files.readAllBytes(Paths.get(fileName))); 
-    return data; 
-  } 
+    
+    //Return a ArrayList of Strings, each String is a line of the Html Document. 
+    public ArrayList<String> getHTMLDocument(String filename, int initialPosition, int endPosition) throws IOException{
+        String data = readFile(filename);
+        String[] dataLines = data.split("\n");
+        ArrayList<String> html = new ArrayList<>();
+        boolean isLine = false;
+        int linePosition = 0;
+        for(String line : dataLines){
+            if(linePosition == initialPosition) isLine = true;
+            if(isLine){
+                html.add(line);
+            }
+            if(linePosition == endPosition) break;
+            linePosition++;
+        }
+        return html;
+    }
+    
+    //Return the Html Documents of a txt file
+    //The HTML begins with <!DOCTYPE... and ends with </html>
+    public ArrayList<HtmlDocument> getHTMLDocuments(String filename) throws IOException{
+        ArrayList<HtmlDocument> htmlDocuments = new ArrayList<>();
+        String data = readFile(filename);
+        String[] dataLines = data.split("\n");
+        
+        HtmlDocument  actualHtmlDocument = null;
+        int linePosition = 0;
+        for(String line : dataLines){
+            if(line.contains(HtmlDocument.intialTag)){
+                actualHtmlDocument = new HtmlDocument();
+                actualHtmlDocument.setInitialPosition(linePosition);
+            }
+            else if(actualHtmlDocument != null && (line.contains(HtmlDocument.endTag))){
+                actualHtmlDocument.setEndPosition(linePosition);
+                htmlDocuments.add(actualHtmlDocument);
+            }
+            
+            actualHtmlDocument.addLine(line);
+            
+            linePosition++;
+        }
+        return htmlDocuments;
+    }
     
     public String parse(String htmlText){
 

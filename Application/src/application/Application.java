@@ -18,24 +18,16 @@ import org.jsoup.select.Elements;
  */
 public class Application {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) throws IOException {
-         /*
+    public static void main(String[] args) throws IOException{
+                      
         WebPageManager wb = new WebPageManager();        
-        ArrayList<HtmlDocument> documents = wb.getHTMLDocuments("Collections/wiki-p1.txt");
-       
-        int i = 0;
+        ArrayList<String> html = wb.getHTMLDocument("D:\\Documentos\\Collections\\wiki-p1.txt", 0, 144);
+        String texto = "<body>Me cago en la put4 esto está caliente. Los viernes de la jungla estan a todo ojete </body>";
+        String cleanText = wb.removeStopWords(texto);
+        //for(String line : html) texto += line;
+        String body = wb.parse(cleanText);
+        System.out.println(body);
         
-        for(HtmlDocument doc : documents){
-            if(i == 1) break;
-            System.out.println("Initial Position: " + doc.getInitialPosition());
-            ArrayList<String> html = wb.getHTMLDocument("Collections/wiki-p1.txt", doc.getInitialPosition(), doc.getEndPosition());
-            System.out.println(doc.getHtmlText().length());
-            System.out.println("End Position: " + doc.getEndPosition());
-            i++;
-        
-        }
-*/
     }
+
+}

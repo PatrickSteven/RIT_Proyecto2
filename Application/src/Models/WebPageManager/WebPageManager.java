@@ -45,6 +45,7 @@ import org.apache.lucene.util.AttributeFactory;
 
 public class WebPageManager {
       
+    private Set<String> stopWords;
     
     public ArrayList<WebPage> getWebPages(File dataFile){
         
@@ -102,6 +103,17 @@ public class WebPageManager {
         return htmlDocuments;
     }
     
+    public String removeStopWords(String text){
+        String cleanText = "";
+        Set<String> stopwords = Stopwords.LoadStopWords();
+        String[] words = text.split(" ");
+        for(String word : words){
+            if(!stopwords.contains(word))
+                cleanText += word + " ";
+        }
+        return cleanText;
+    }
+    
     public String parse(String htmlText){
 
           Document doc = Jsoup.parse(htmlText);
@@ -131,14 +143,13 @@ public class WebPageManager {
           //System.out.println("body " + body);
           newBody = removeNumbers(body);
           newBody = makeItSpanish(newBody);
-          return newBody;
-          
+          return newBody;          
     }
     
     public String removeNumbers(String text){
     
-        String[] newText = text.replaceAll("\\w*\\d\\w*", "").split("  +");
-        String cleanText = String.join("", newText);
+        String[] newText = text.replaceAll("\\w*\\d\\w*", " ").split("  +");
+        String cleanText = String.join(" ", newText);
         
         //System.out.println(cleanText);               
         return cleanText;
@@ -165,8 +176,8 @@ public class WebPageManager {
     public String makeItSpanish(String text){
     
         text = replaceAccents(text);
-        String[] newText = text.replaceAll("\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+|[^A-Za-zÑñ\\s]+", "").split("  +  ");
-        String cleanText = String.join("", newText);
+        String[] newText = text.replaceAll("\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+|[^A-Za-zÑñ\\s]+", " ").split("  +  ");
+        String cleanText = String.join(" ", newText);
         
         System.out.println(cleanText);
         return cleanText;

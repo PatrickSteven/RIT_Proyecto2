@@ -1,4 +1,7 @@
-package Models;
+package Models.IndexManager;
+import Models.WebPageManager.WebPageManager;
+import Models.WebPageManager.WebPageConstants;
+import Models.WebPageManager.WebPage;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
@@ -6,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -25,12 +29,18 @@ public class Indexer {
     IndexWriter indexWriter;
     WebPageManager webPageManager;
     
+    float time;
+    int cuantityDocuments;
+    
     public Indexer(){
         this.webPageManager = new WebPageManager();
     }
     
     public void Index(String indexDirPath, String dataDirPath) throws IOException{
-               
+        
+        //START TIME
+        long startTime = System.currentTimeMillis();
+        
         //Create directory of the given index path
         Directory indexDirectory = FSDirectory.open(Paths.get(indexDirPath));
         
@@ -41,9 +51,24 @@ public class Indexer {
         
         //Create IndexWriter
         this.indexWriter = new IndexWriter(indexDirectory, indexConfig);
+        
+        //Add documents
+        int documents = this.addDocuments(dataDirPath);
+        
+        //Close Index
+        this.close();
+        
+        //END TIME
+        long endTime = System.currentTimeMillis();
+        
+        //Add Time result
+        this.time = endTime - startTime;
+        //Cuantity of indexed documents
+        this.cuantityDocuments = documents;
+        
     }
     
-    public void addDocuments(String dataDirPath) throws IOException{
+    private int addDocuments(String dataDirPath) throws IOException{
         //Get WebPages in the provided .txt file 
         ArrayList<WebPage> webPages;
         webPages = this.webPageManager.getWebPages(new File(dataDirPath));
@@ -59,8 +84,11 @@ public class Indexer {
             doc.add(new TextField(WebPageConstants.ENCAB, webPage.getEncab(), Field.Store.YES));
             doc.add(new TextField(WebPageConstants.TITULO, webPage.getTitulo(), Field.Store.YES));
 
-            //Field that is a single string, one token. No Store
+            //Fields that are a single string, one token. No Store
             doc.add(new StringField(WebPageConstants.ENLACE, webPage.getEnlace(), Field.Store.NO));
+            
+            //Collection of the documet, Path.
+            doc.add(new StringField(WebPageConstants.COLLECTION, webPage.getCollection(), Field.Store.NO));
             
             //Initial and end position of the Document in the Collection .txt file
             //Int to String
@@ -70,9 +98,10 @@ public class Indexer {
             //Add the document in the index
                this.indexWriter.addDocument(doc);
         }
+        return webPages.size();
     }
     
-    public void close() throws CorruptIndexException, IOException {
+    private void close() throws CorruptIndexException, IOException {
         this.indexWriter.close();
     }
     

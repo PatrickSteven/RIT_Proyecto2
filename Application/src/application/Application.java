@@ -5,8 +5,8 @@
  */
 package application;
 
-import Models.HtmlDocument;
-import Models.WebPageManager;
+import Models.WebPageManager.HtmlDocument;
+import Models.WebPageManager.WebPageManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.jsoup.nodes.Element;

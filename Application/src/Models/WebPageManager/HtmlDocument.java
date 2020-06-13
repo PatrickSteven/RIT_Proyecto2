@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Models;
+package Models.WebPageManager;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,7 @@ import java.util.ArrayList;
  */
 public class HtmlDocument {
     private ArrayList<String> html;
+    private String collection;
     private int initialPosition;
     private int endPosition;
     
@@ -22,9 +23,16 @@ public class HtmlDocument {
     public HtmlDocument() {
         this.html = new ArrayList<>();
     }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
+    }
     
-    
-    
+       
     public void addLine(String newLine){
         html.add(newLine);
     }

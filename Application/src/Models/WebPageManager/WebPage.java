@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Models;
+package Models.WebPageManager;
 
 public class WebPage {
     private String texto;
@@ -11,6 +11,7 @@ public class WebPage {
     private String encab;
     private String titulo;
     private String enlace;
+    private String collection;
     
     private int initialPosition;
     private int endPosition;
@@ -82,6 +83,14 @@ public class WebPage {
 
     public void setEndPosition(int endPosition) {
         this.endPosition = endPosition;
+    }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
     }
     
     

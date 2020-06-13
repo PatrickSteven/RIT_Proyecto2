@@ -1,5 +1,5 @@
 
-package Models;
+package Models.WebPageManager;
 import static Models.FileManager.FileManager.readFile;
 import java.nio.file.*;; 
 import java.io.File;
@@ -52,8 +52,8 @@ public class WebPageManager {
     
     
     //Return a ArrayList of Strings, each String is a line of the Html Document. 
-    public ArrayList<String> getHTMLDocument(String filename, int initialPosition, int endPosition) throws IOException{
-        String data = readFile(filename);
+    public ArrayList<String> getHTMLDocument(String collection, int initialPosition, int endPosition) throws IOException{
+        String data = readFile(collection);
         String[] dataLines = data.split("\n");
         ArrayList<String> html = new ArrayList<>();
         boolean isLine = false;

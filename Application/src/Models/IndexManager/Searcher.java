@@ -1,5 +1,6 @@
 
-package Models;
+package Models.IndexManager;
+import Models.WebPageManager.WebPageConstants;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -31,14 +32,23 @@ public class Searcher {
     int maxDocs = 100;
     private final Set<String> fieldsToLoad;
     
+    float searchTime;
+    
     public Searcher(){
         //Fields that have the documents retrieved
         this.fieldsToLoad = new HashSet<>();
         this.fieldsToLoad.add(WebPageConstants.TITULO);
         this.fieldsToLoad.add(WebPageConstants.ENLACE);
+        this.fieldsToLoad.add(WebPageConstants.COLLECTION);
+        this.fieldsToLoad.add(WebPageConstants.INITPOS);
+        this.fieldsToLoad.add(WebPageConstants.ENDPOS);
     }
     
     public ArrayList<Document> Search(String indexDirPath, String queryString) throws IOException, ParseException{
+        //START TIME
+        
+        float startTime = System.currentTimeMillis();
+        
         //Create a directory of the given path
         Directory indexDirectory = FSDirectory.open(Paths.get(indexDirPath));
         //Check if the index exists
@@ -48,6 +58,11 @@ public class Searcher {
             //Do the query
             this.queryParser = new QueryParser(WebPageConstants.TEXTO, new StandardAnalyzer());
             TopDocs topDocs = this.DoQuery(queryString);
+            
+            //ENDTIME 
+            float endTime = System.currentTimeMillis();
+            this.searchTime = endTime - startTime;
+            
             //Return result of the query
             return this.getDocuments(topDocs);
         }
@@ -56,7 +71,7 @@ public class Searcher {
         else return null;
     }
     
-    public ArrayList<Document> getDocuments(TopDocs topDocs) throws IOException{
+    private ArrayList<Document> getDocuments(TopDocs topDocs) throws IOException{
         ArrayList<Document> documents = new ArrayList<>();
         for(ScoreDoc scoreDoc : topDocs.scoreDocs){
             documents.add(indexSearcher.doc(maxDocs, fieldsToLoad));
@@ -64,13 +79,13 @@ public class Searcher {
         return documents;
     }
     
-    public TopDocs DoQuery(String queryString) throws ParseException, IOException{
+    private TopDocs DoQuery(String queryString) throws ParseException, IOException{
         //Query string -> query syntax 
         this.query = queryParser.parse(queryString);
         return indexSearcher.search(query, maxDocs);
     }
     
-    public boolean Exists(Directory dir) throws IOException{
+    private boolean Exists(Directory dir) throws IOException{
         return DirectoryReader.indexExists(dir);
     }
     

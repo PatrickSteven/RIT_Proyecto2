@@ -1,4 +1,4 @@
-package Models;
+package Models.WebPageManager;
 
 import java.util.HashSet;
 public class WebPageConstants {
@@ -9,5 +9,6 @@ public class WebPageConstants {
     public static final String ENLACE = "enlace";
     public static final String INITPOS = "initialPosition";
     public static final String ENDPOS = "endPosition";
+    public static final String COLLECTION = "collection";
     
 }

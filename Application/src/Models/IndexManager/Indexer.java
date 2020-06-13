@@ -100,6 +100,16 @@ public class Indexer {
         }
         return webPages.size();
     }
+
+    public float getTime() {
+        return time;
+    }
+
+    public int getCuantityDocuments() {
+        return cuantityDocuments;
+    }
+    
+    
     
     private void close() throws CorruptIndexException, IOException {
         this.indexWriter.close();

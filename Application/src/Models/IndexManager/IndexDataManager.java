@@ -5,12 +5,13 @@ import Models.FileManager.FileManager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class IndexDataManager implements Serializable{
     
     private static IndexData indexData;
-    public static final String IndexDataFilePath = "Data/indexData";
-    public static final String IndexFilePath = "Data/Index/index_";
+    public static final String IndexDataFilePath = "../Data/indexData";
+    public static final String IndexFilePath = "../Data/Index/index_";
 
     public IndexDataManager() {
         LoadIndexData();
@@ -18,7 +19,7 @@ public class IndexDataManager implements Serializable{
     
     
     
-    public class IndexData{
+    public class IndexData implements Serializable{
         //If there is not object in Data file //The readObject method return null
         public IndexData() {
             this.indexCollections = new HashMap<>();
@@ -32,6 +33,13 @@ public class IndexDataManager implements Serializable{
         //Index : [indexPath]
         //"IndexWiki1" : "Data/Index/Index_Wiki_1
         public HashMap<String, String> indexPath;
+        
+        public String[] getIndexes(){
+            Set<String> indexesNames = indexCollections.keySet();
+            String allKeys = "";
+            for(String name : indexesNames) allKeys += name;
+            return allKeys.split(" ");
+        }
     }
     
     public void Save(){
@@ -46,10 +54,11 @@ public class IndexDataManager implements Serializable{
     private void LoadIndexData(){
         IndexDataManager.indexData = (IndexData) FileManager.readObject(IndexDataFilePath);
         if(IndexDataManager.indexData == null) IndexDataManager.indexData = new IndexData();
+        this.SaveIndexData();
     }
    
     //Save changes in index data
     private void SaveIndexData(){
-        FileManager.writeObject(indexData, IndexDataFilePath);
+        FileManager.writeObject(IndexDataManager.indexData, IndexDataFilePath);
     }
 }

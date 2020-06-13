@@ -5,10 +5,13 @@
  */
 package application;
 
+import Controllers.IndexerController;
+import Models.IndexManager.IndexDataManager;
 import Models.WebPageManager.HtmlDocument;
 import Models.WebPageManager.WebPageManager;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -25,9 +28,6 @@ public class Application {
         String texto = "<body>Me cago en la put4 esto está caliente. Los viernes de la jungla estan a todo ojete </body>";
         String cleanText = wb.removeStopWords(texto);
         //for(String line : html) texto += line;
-        String body = wb.parse(cleanText);
-        System.out.println(body);
-        
+        String body = wb.parse(cleanText);        
     }
-
 }

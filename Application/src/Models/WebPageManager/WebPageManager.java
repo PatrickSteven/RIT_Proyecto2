@@ -182,9 +182,5 @@ public class WebPageManager {
         System.out.println(cleanText);
         return cleanText;
     }
-    
-
-
-
-    
+      
 }

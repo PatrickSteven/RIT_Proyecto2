@@ -1,8 +1,8 @@
 package Controllers;
 
 import Models.IndexManager.Searcher;
-import Models.WebPageManager.WebPageConstants;
-import Models.WebPageManager.WebPageManager;
+import Models.WebPageManagerP.WebPageConstants;
+import Models.WebPageManagerP.WebPageManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;

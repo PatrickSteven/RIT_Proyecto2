@@ -1,6 +1,6 @@
 
 package Models.IndexManager;
-import Models.WebPageManager.WebPageConstants;
+import Models.WebPageManagerP.WebPageConstants;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;

@@ -1,7 +1,7 @@
 package Models.IndexManager;
-import Models.WebPageManager.WebPageManager;
-import Models.WebPageManager.WebPageConstants;
-import Models.WebPageManager.WebPage;
+import Models.WebPageManagerP.WebPageManager;
+import Models.WebPageManagerP.WebPageConstants;
+import Models.WebPageManagerP.WebPage;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
@@ -53,7 +53,7 @@ public class Indexer {
         this.indexWriter = new IndexWriter(indexDirectory, indexConfig);
         
         //Add documents
-        int documents = this.addDocuments(dataDirPath);
+        //int documents = this.addDocuments(dataDirPath);
         
         //Close Index
         this.close();
@@ -64,10 +64,10 @@ public class Indexer {
         //Add Time result
         this.time = endTime - startTime;
         //Cuantity of indexed documents
-        this.cuantityDocuments = documents;
+        //this.cuantityDocuments = documents;
         
     }
-    
+    /*
     private int addDocuments(String dataDirPath) throws IOException{
         //Get WebPages in the provided .txt file 
         ArrayList<WebPage> webPages;
@@ -100,7 +100,7 @@ public class Indexer {
         }
         return webPages.size();
     }
-
+*/
     public float getTime() {
         return time;
     }

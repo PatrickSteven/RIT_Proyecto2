@@ -1,5 +1,5 @@
 
-package Models.WebPageManager;
+package Models.WebPageManagerP;
 import static Models.FileManager.FileManager.readFile;
 import java.nio.file.*;; 
 import java.io.File;
@@ -46,18 +46,20 @@ import org.apache.lucene.util.AttributeFactory;
 public class WebPageManager {
       
     private Set<String> stopWords;
-    
-    public ArrayList<WebPage> getWebPages(File dataFile){
-        
-        try {
-            String htmlText = readFile("C:\\ITCR\\unHTML.txt");
-            parse(htmlText);
-        } catch (IOException ex) {
-            
-        }
-        return new ArrayList<>(); //Es solo poder llamar al metodo //Usted implementelo bien
+    ArrayList<WebPage> webPageList;
+    Document doc;
+    public ArrayList<WebPage> getWebPages(File dataFile) throws IOException{
+         
+            String htmlText = readFile(dataFile.getPath());
+            ArrayList<HtmlDocument> htmlTexts = getHTMLDocuments(htmlText);
+            parse(htmlTexts);
+
+        return webPageList; //Es solo poder llamar al metodo //Usted implementelo bien
     }
     
+    public void resetWebPageList(){
+        this.webPageList = null;
+    }
     
     //Return a ArrayList of Strings, each String is a line of the Html Document. 
     public ArrayList<String> getHTMLDocument(String collection, int initialPosition, int endPosition) throws IOException{
@@ -114,36 +116,67 @@ public class WebPageManager {
         return cleanText;
     }
     
-    public String parse(String htmlText){
-
-          Document doc = Jsoup.parse(htmlText);
-          String title = doc.title();
-          String body = doc.body().text();
-          String newBody;
+    public void parse(ArrayList<HtmlDocument> htmlTexts){
+        
+        String title;
+        String body;
+        String newBody;
+        String aText = "";
+        String hText = "";
+        String hRef = "";
+        
+        
+        for (HtmlDocument html : htmlTexts){
+          doc = Jsoup.parse(html.getHtmlText());
+          title = doc.title();
+          body = doc.body().text();  
           
+          Element hrefTag = doc.body().select("a").first();
+          hRef = hrefTag.attr("href");
           Elements aTags = doc.body().select("a");
-          String aText = "";
-
           for (Element element : aTags){
             
             aText += (element.ownText());
           }
           
-          Elements hTags = doc.select("h1, h2, h3, h4, h5, h6");
-          String hText = "";
-          
+          Elements hTags = doc.select("h1, h2, h3, h4, h5, h6");      
           for (Element element : hTags){
             
             hText += (element.ownText());
           }
           
-          //System.out.println("title " + title);
-          //System.out.println("a " + aText);
-          //System.out.println("h " + hText);
-          //System.out.println("body " + body);
-          newBody = removeNumbers(body);
-          newBody = makeItSpanish(newBody);
-          return newBody;          
+          System.out.println("title " + title);
+          System.out.println("Href: " + hRef);
+          System.out.println("a " + aText);
+          System.out.println("h " + hText);
+          System.out.println("body " + body);
+          
+          body = removeNumbers(body);
+          body = makeItSpanish(body);
+          body = removeStopWords(body);
+          
+          hText = removeNumbers(hText);
+          hText = makeItSpanish(hText);
+          hText = removeStopWords(hText);
+          
+          title = removeNumbers(title);
+          title = makeItSpanish(title);
+          
+          aText = removeNumbers(aText);
+          aText = makeItSpanish(aText);
+          
+          System.out.println("title LIMPIO " + title);
+          System.out.println("a LIMPIO " + aText);
+          System.out.println("h LIMPIO " + hText);
+          System.out.println("body LIMPIO " + body);
+
+          int startHTML = html.getInitialPosition();
+          int endHTML = html.getEndPosition();
+          
+           webPageList.add(new WebPage(body, aText, hText, title, hRef, startHTML, endHTML));
+           
+        }
+         doc = null;
     }
     
     public String removeNumbers(String text){
@@ -179,7 +212,7 @@ public class WebPageManager {
         String[] newText = text.replaceAll("\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+|[^A-Za-zÑñ\\s]+", " ").split("  +  ");
         String cleanText = String.join(" ", newText);
         
-        System.out.println(cleanText);
+        //System.out.println(cleanText);
         return cleanText;
     }
       

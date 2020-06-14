@@ -5,6 +5,7 @@ import Controllers.IndexerController;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import Models.IndexManager.IndexDataManager.IndexData;
 import Models.IndexManager.IndexDataManager;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -378,7 +379,7 @@ public class IndexView extends javax.swing.JFrame {
             try {
                 this.updateMsgLabel.setText("");
                 this.indexingInfoArea.setText("");
-                addTextIndexingArea("Accesing " + this.indexNameField.getText() + "\n");
+                addTextIndexingArea("Accesing " + indexName + "\n");
                 addTextIndexingArea("Updating index, collection " + this.createCollectionPath + "\n");
                 controller.updateIndex(indexName, updateCollectionPath);
                 addTextIndexingArea("Succesfull!");

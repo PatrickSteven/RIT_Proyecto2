@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class Stopwords {
     
-    private static String stopWordsFile = "D:\\Documentos\\GitHub\\RIT_Proyecto2\\Data\\set_stopwords";
+    private static String stopWordsFile = "..\\Data\\set_stopwords";
     private static String stopwordTerms = "a\n" +
         "aca\n" +
         "ahi\n" +

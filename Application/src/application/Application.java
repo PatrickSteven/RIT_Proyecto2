@@ -33,9 +33,10 @@ public class Application {
         //for(String line : html) texto += line;
         String body = wb.parse(cleanText);    
         */
-        //File htmlFile = new File("C:\\ITCR\\unHTML.txt");
+        String htmlPath = "C:\\ITCR\\unHTML.txt";
         
-        //wb.getWebPages(htmlFile);
+        
+        wb.getWebPages(htmlPath);
         //wb.resetWebPageList();
     }   
         

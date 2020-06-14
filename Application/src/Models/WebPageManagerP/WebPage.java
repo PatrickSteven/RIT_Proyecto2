@@ -16,7 +16,7 @@ public class WebPage {
     private int initialPosition;
     private int endPosition;
 
-    public WebPage(String texto, String ref, String encab, String titulo, String enlace, int initialPosition, int endPosition) {
+    public WebPage(String texto, String ref, String encab, String titulo, String enlace, int initialPosition, int endPosition, String path) {
         this.texto = texto;
         this.ref = ref;
         this.encab = encab;
@@ -24,6 +24,7 @@ public class WebPage {
         this.enlace = enlace;
         this.initialPosition = initialPosition;
         this.endPosition = endPosition;
+        this.collection = path;
     }
 
     public WebPage() {

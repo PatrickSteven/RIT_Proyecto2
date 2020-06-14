@@ -46,13 +46,13 @@ import org.apache.lucene.util.AttributeFactory;
 public class WebPageManager {
       
     private Set<String> stopWords;
-    ArrayList<WebPage> webPageList;
+    ArrayList<WebPage> webPageList = new ArrayList();
     Document doc;
-    public ArrayList<WebPage> getWebPages(File dataFile) throws IOException{
+    
+    public ArrayList<WebPage> getWebPages(String dataFile) throws IOException{
          
-            String htmlText = readFile(dataFile.getPath());
-            ArrayList<HtmlDocument> htmlTexts = getHTMLDocuments(htmlText);
-            parse(htmlTexts);
+            ArrayList<HtmlDocument> htmlTexts = getHTMLDocuments(dataFile);
+            parse(htmlTexts, dataFile);
 
         return webPageList; //Es solo poder llamar al metodo //Usted implementelo bien
     }
@@ -116,23 +116,19 @@ public class WebPageManager {
         return cleanText;
     }
     
-    public void parse(ArrayList<HtmlDocument> htmlTexts){
+    public void parse(ArrayList<HtmlDocument> htmlTexts, String dataPath){
         
         String title;
         String body;
         String newBody;
         String aText = "";
         String hText = "";
-        String hRef = "";
         
         
         for (HtmlDocument html : htmlTexts){
           doc = Jsoup.parse(html.getHtmlText());
           title = doc.title();
           body = doc.body().text();  
-          
-          Element hrefTag = doc.body().select("a").first();
-          hRef = hrefTag.attr("href");
           Elements aTags = doc.body().select("a");
           for (Element element : aTags){
             
@@ -144,12 +140,14 @@ public class WebPageManager {
             
             hText += (element.ownText());
           }
-          
+          title = title.toLowerCase();
+          aText = aText.toLowerCase();
+          hText = hText.toLowerCase();
+          body = body.toLowerCase();
           System.out.println("title " + title);
-          System.out.println("Href: " + hRef);
           System.out.println("a " + aText);
           System.out.println("h " + hText);
-          System.out.println("body " + body);
+          System.out.println("body " + body + "\n");
           
           body = removeNumbers(body);
           body = makeItSpanish(body);
@@ -169,11 +167,12 @@ public class WebPageManager {
           System.out.println("a LIMPIO " + aText);
           System.out.println("h LIMPIO " + hText);
           System.out.println("body LIMPIO " + body);
+          System.out.println("collections " + dataPath + "\n");
 
           int startHTML = html.getInitialPosition();
           int endHTML = html.getEndPosition();
           
-           webPageList.add(new WebPage(body, aText, hText, title, hRef, startHTML, endHTML));
+           webPageList.add(new WebPage(body, aText, hText, title, "Hola", startHTML, endHTML, dataPath));
            
         }
          doc = null;
@@ -184,7 +183,6 @@ public class WebPageManager {
         String[] newText = text.replaceAll("\\w*\\d\\w*", " ").split("  +");
         String cleanText = String.join(" ", newText);
         
-        //System.out.println(cleanText);               
         return cleanText;
     }
     
@@ -212,7 +210,6 @@ public class WebPageManager {
         String[] newText = text.replaceAll("\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+|[^A-Za-zÑñ\\s]+", " ").split("  +  ");
         String cleanText = String.join(" ", newText);
         
-        //System.out.println(cleanText);
         return cleanText;
     }
       

@@ -18,6 +18,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 public class FileManager implements Serializable{
+    
     public static String readFile(String path) 
     throws FileNotFoundException, IOException
     {  String str;

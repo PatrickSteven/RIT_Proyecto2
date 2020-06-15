@@ -1,7 +1,7 @@
 package Models.IndexManager;
-import Models.WebPageManagerP.WebPageManager;
-import Models.WebPageManagerP.WebPageConstants;
-import Models.WebPageManagerP.WebPage;
+import Models.WebPageManager.WebPageManager;
+import Models.WebPageManager.WebPageConstants;
+import Models.WebPageManager.WebPage;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
@@ -17,6 +17,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexableField;
@@ -31,6 +32,7 @@ public class Indexer {
     
     float time;
     int cuantityDocuments;
+    int numDocs;
     
     public Indexer(){
         this.webPageManager = new WebPageManager();
@@ -53,7 +55,7 @@ public class Indexer {
         this.indexWriter = new IndexWriter(indexDirectory, indexConfig);
         
         //Add documents
-        //int documents = this.addDocuments(dataDirPath);
+        int documents = this.addDocuments(dataDirPath);
         
         //Close Index
         this.close();
@@ -64,14 +66,14 @@ public class Indexer {
         //Add Time result
         this.time = endTime - startTime;
         //Cuantity of indexed documents
-        //this.cuantityDocuments = documents;
-        
+        this.cuantityDocuments = documents;
+       
     }
-    /*
+    
     private int addDocuments(String dataDirPath) throws IOException{
         //Get WebPages in the provided .txt file 
         ArrayList<WebPage> webPages;
-        webPages = this.webPageManager.getWebPages(new File(dataDirPath));
+        webPages = this.webPageManager.getWebPages(dataDirPath);
       
         //Iterate the arrayList and add the documents to the index
         for(WebPage webPage : webPages){
@@ -100,17 +102,20 @@ public class Indexer {
         }
         return webPages.size();
     }
-*/
+
     public float getTime() {
-        return time;
+        return time / 100;
     }
 
     public int getCuantityDocuments() {
         return cuantityDocuments;
     }
     
+    public int getNumDocs(){
+        return numDocs;
+    }
     
-    
+       
     private void close() throws CorruptIndexException, IOException {
         this.indexWriter.close();
     }

@@ -7,8 +7,11 @@ package application;
 
 import Controllers.IndexerController;
 import Models.IndexManager.IndexDataManager;
-import Models.WebPageManagerP.HtmlDocument;
-import Models.WebPageManagerP.WebPageManager;
+import Models.WebPageManager.HtmlDocument;
+import Models.WebPageManager.WebPage;
+import Models.WebPageManager.WebPageManager;
+import Views.IndexView;
+import Views.SearchView;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,19 +28,6 @@ public class Application {
     public static void main(String[] args) throws IOException{
             
         
-        WebPageManager wb = new WebPageManager();    
-        /*
-        ArrayList<String> html = wb.getHTMLDocument("D:\\Documentos\\Collections\\wiki-p1.txt", 0, 144);
-        String texto = "<body>Me cago en la put4 esto está caliente. Los viernes de la jungla estan a todo ojete </body>";
-        String cleanText = wb.removeStopWords(texto);
-        //for(String line : html) texto += line;
-        String body = wb.parse(cleanText);    
-        */
-        String htmlPath = "C:\\ITCR\\unHTML.txt";
-        
-        
-        wb.getWebPages(htmlPath);
-        //wb.resetWebPageList();
     }   
         
         

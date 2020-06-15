@@ -1,6 +1,6 @@
 
 package Models.IndexManager;
-import Models.WebPageManagerP.WebPageConstants;
+import Models.WebPageManager.WebPageConstants;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -33,6 +33,8 @@ public class Searcher {
     private final Set<String> fieldsToLoad;
     
     float searchTime;
+    long queryDocs;
+    long totalDocs;
     
     public Searcher(){
         //Fields that have the documents retrieved
@@ -53,12 +55,15 @@ public class Searcher {
         Directory indexDirectory = FSDirectory.open(Paths.get(indexDirPath));
         //Check if the index exists
         if(this.Exists(indexDirectory)){
+            System.out.println("Index exists");
             this.indexReader = DirectoryReader.open(indexDirectory);
             this.indexSearcher = new IndexSearcher(indexReader);
             //Do the query
             this.queryParser = new QueryParser(WebPageConstants.TEXTO, new StandardAnalyzer());
             TopDocs topDocs = this.DoQuery(queryString);
-            
+            queryDocs = topDocs.totalHits.value;
+            totalDocs = this.indexReader.numDocs();
+            maxDocs = (int) totalDocs;
             //ENDTIME 
             float endTime = System.currentTimeMillis();
             this.searchTime = endTime - startTime;
@@ -73,9 +78,12 @@ public class Searcher {
     
     private ArrayList<Document> getDocuments(TopDocs topDocs) throws IOException{
         ArrayList<Document> documents = new ArrayList<>();
+        int index = 0;
         for(ScoreDoc scoreDoc : topDocs.scoreDocs){
-            documents.add(indexSearcher.doc(maxDocs, fieldsToLoad));
+            documents.add(indexSearcher.doc(scoreDoc.doc, fieldsToLoad));
+            index++;
         }
+        System.out.println("Documentes: " + documents.size());
         return documents;
     }
     
@@ -87,6 +95,18 @@ public class Searcher {
     
     private boolean Exists(Directory dir) throws IOException{
         return DirectoryReader.indexExists(dir);
+    }
+    
+    public long getTotalDocs(){
+        return totalDocs;
+    }
+    
+    public long getQueryDocs(){
+        return queryDocs;
+    }
+    
+    public float getSearchTime(){
+        return searchTime/100;
     }
     
 }

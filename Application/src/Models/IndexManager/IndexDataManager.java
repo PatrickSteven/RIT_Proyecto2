@@ -20,11 +20,6 @@ public class IndexDataManager implements Serializable{
     
     
     public class IndexData implements Serializable{
-        //If there is not object in Data file //The readObject method return null
-        public IndexData() {
-            this.indexCollections = new HashMap<>();
-            this.indexPath = new HashMap<>();
-        }
 
         // Index : [Collection1, Collection2]
         // "IndexWiki1" : ["Collections/Wiki1/wiki-p1.txt", "Collections/Wiki1/wiki-g1.txt"],  
@@ -33,6 +28,12 @@ public class IndexDataManager implements Serializable{
         //Index : [indexPath]
         //"IndexWiki1" : "Data/Index/Index_Wiki_1
         public HashMap<String, String> indexPath;
+        
+        //If there is not object in Data file //The readObject method return null
+        public IndexData() {
+            this.indexCollections = new HashMap<String, ArrayList<String>>();
+            this.indexPath = new HashMap<String, String>();
+        }
         
         public String[] getIndexes(){
             Set<String> indexesNames = indexCollections.keySet();
@@ -47,7 +48,7 @@ public class IndexDataManager implements Serializable{
     }
     
     public static IndexData getIndexData(){
-        return indexData;
+        return IndexDataManager.indexData;
     } 
         
     //Load Index Data

@@ -16,8 +16,8 @@ public class IndexView extends javax.swing.JFrame {
 
     private final IndexerController controller;
     private final JFileChooser openFileChooser;
-    private String updateCollectionPath;
-    private String createCollectionPath;
+    private String updateCollectionPath = "";
+    private String createCollectionPath = "";
     
     
     
@@ -313,10 +313,34 @@ public class IndexView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     //
-    private void addTextIndexingArea(String text){
+    public void addTextIndexingArea(String text){
         this.indexingInfoArea.setText(
             this.indexingInfoArea.getText() + text
         );
+    }
+    
+    public void setTextIndexNameField(String text){
+        this.indexNameField.setText(text);
+    }
+    
+    public void setTextCreateMsgLabel(String text){
+        this.createMsgLabel.setText(text);
+    }
+    
+    public void setTextUpdateMsgLabel(String text){
+        this.updateMsgLabel.setText(text);
+    }
+    
+    public void cleanCreateCollectionPath(){
+        this.createCollectionPath = "";
+    }
+    
+    public void cleanUpdateCollectionPath(){
+        this.updateCollectionPath = "";
+    }
+    
+    public void cleanIndexingInfoArea(){
+        this.indexingInfoArea.setText("");
     }
     
     private void openFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileBtnActionPerformed
@@ -339,15 +363,9 @@ public class IndexView extends javax.swing.JFrame {
         }
         else{
             try {
-                this.createMsgLabel.setText("");
-                this.indexingInfoArea.setText("");
-                addTextIndexingArea("Creating index " + this.indexNameField.getText() + "\n");
-                addTextIndexingArea("Indexing collection " + this.createCollectionPath + "\n");
+                
                 controller.createIndex(this.indexNameField.getText(), createCollectionPath);
-                addTextIndexingArea("Succesfull!");
-                addTextIndexingArea(controller.getIndexingInfo() + "\n");
-                this.indexNameField.setText("");
-                this.createCollectionPath = "";
+
                 
             } catch (IOException ex) {
                 this.indexingInfoArea.setText("Error al indexar: " + ex.getMessage());
@@ -377,15 +395,8 @@ public class IndexView extends javax.swing.JFrame {
         }
         else{
             try {
-                this.updateMsgLabel.setText("");
-                this.indexingInfoArea.setText("");
-                addTextIndexingArea("Accesing " + indexName + "\n");
-                addTextIndexingArea("Updating index, collection " + this.createCollectionPath + "\n");
                 controller.updateIndex(indexName, updateCollectionPath);
-                addTextIndexingArea("Succesfull!");
-                addTextIndexingArea(controller.getIndexingInfo() + "\n");
-                this.updateCollectionPath = "";
-                
+                                
             } catch (IOException ex) {
                 this.indexingInfoArea.setText("Error al indexar: " + ex.getMessage());
                 Logger.getLogger(IndexView.class.getName()).log(Level.SEVERE, null, ex);

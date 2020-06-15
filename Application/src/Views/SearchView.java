@@ -10,6 +10,7 @@ import Models.IndexManager.IndexDataManager;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -21,10 +22,13 @@ import javax.swing.ListSelectionModel;
 public class SearchView extends javax.swing.JFrame {
 
     SearcherController controller;  
+    DefaultListModel<String> documents;
     
     public SearchView() {
         this.controller = new SearcherController(this);  
+        this.documents = new DefaultListModel<String>();
         initComponents();
+        this.documentsList.setModel(this.documents);
     }
 
 
@@ -36,6 +40,7 @@ public class SearchView extends javax.swing.JFrame {
         DocumentsPane = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         documentsList = new javax.swing.JList();
+        openDocBtn = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         numberPageField = new javax.swing.JLabel();
         previousPageBtn = new javax.swing.JButton();
@@ -66,20 +71,33 @@ public class SearchView extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(documentsList);
 
+        openDocBtn.setText("Open");
+        openDocBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openDocBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout DocumentsPaneLayout = new javax.swing.GroupLayout(DocumentsPane);
         DocumentsPane.setLayout(DocumentsPaneLayout);
         DocumentsPaneLayout.setHorizontalGroup(
             DocumentsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(DocumentsPaneLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(DocumentsPaneLayout.createSequentialGroup()
+                .addGap(227, 227, 227)
+                .addComponent(openDocBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         DocumentsPaneLayout.setVerticalGroup(
             DocumentsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DocumentsPaneLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
+                .addComponent(openDocBtn)
                 .addContainerGap())
         );
 
@@ -209,9 +227,9 @@ public class SearchView extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(searchMsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(DocumentsPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -224,8 +242,15 @@ public class SearchView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     private void LoadPage(){
-        String[] documents = controller.getDocumentAtPage();
-        this.documentsList = new JList(documents);
+        String[] newDocuments = controller.getDocumentAtPage();
+        this.documents.clear();
+        for(String doc : newDocuments){
+            this.documents.addElement(doc);
+        }
+    }
+    
+    public void setSearchInfo(String text){
+        this.searchMsgLabel.setText(text);
     }
     
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
@@ -235,6 +260,7 @@ public class SearchView extends javax.swing.JFrame {
         else{
             try {
                 controller.Search(this.IndexNameField.getSelectedItem().toString(), this.searchField.getText());
+                LoadPage();
             } catch (IOException ex) {
                 this.searchMsgLabel.setText("Error: " + ex.getMessage());
                 Logger.getLogger(SearchView.class.getName()).log(Level.SEVERE, null, ex);
@@ -247,7 +273,7 @@ public class SearchView extends javax.swing.JFrame {
             LoadPage();
             this.numberPageField.setText("Page " + controller.getPage());
         }
-        else this.numberPageField.setText("Last page");
+        else this.numberPageField.setText("Firs page");
     }//GEN-LAST:event_previousPageBtnActionPerformed
 
     private void nextPageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextPageBtnActionPerformed
@@ -256,8 +282,12 @@ public class SearchView extends javax.swing.JFrame {
             this.numberPageField.setText("Page " + controller.getPage());
 
         }
-        else this.numberPageField.setText("First page");
+        else this.numberPageField.setText("Last page");
     }//GEN-LAST:event_nextPageBtnActionPerformed
+
+    private void openDocBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDocBtnActionPerformed
+        this.controller.openDocument(this.documentsList.getSelectedIndex());
+    }//GEN-LAST:event_openDocBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -306,6 +336,7 @@ public class SearchView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton nextPageBtn;
     private javax.swing.JLabel numberPageField;
+    private javax.swing.JButton openDocBtn;
     private javax.swing.JButton previousPageBtn;
     private javax.swing.JButton searchBtn;
     private javax.swing.JTextField searchField;

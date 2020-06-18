@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Models.WebPageManager;
+package Models.WebPageManagerP;
 
 public class WebPage {
     private String texto;

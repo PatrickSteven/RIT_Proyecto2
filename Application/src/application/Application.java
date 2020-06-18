@@ -7,9 +7,9 @@ package application;
 
 import Controllers.IndexerController;
 import Models.IndexManager.IndexDataManager;
-import Models.WebPageManager.HtmlDocument;
-import Models.WebPageManager.WebPage;
-import Models.WebPageManager.WebPageManager;
+import Models.WebPageManagerP.HtmlDocument;
+import Models.WebPageManagerP.WebPage;
+import Models.WebPageManagerP.WebPageManager;
 import Views.IndexView;
 import Views.SearchView;
 import java.io.File;
@@ -19,18 +19,17 @@ import java.util.HashMap;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+
+
 /**
  *
  * @author Personal
  */
 public class Application {
 
-    public static void main(String[] args) throws IOException{
-            
-        
-    }   
-        
-        
-        
+    public static void main(String[] args) throws IOException{    
+      
+
+    }        
 }
     

@@ -1,4 +1,4 @@
-package Models.WebPageManager;
+package Models.WebPageManagerP;
 
 import java.util.HashSet;
 public class WebPageConstants {

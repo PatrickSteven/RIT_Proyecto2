@@ -1,7 +1,7 @@
 package Models.IndexManager;
-import Models.WebPageManager.WebPageManager;
-import Models.WebPageManager.WebPageConstants;
-import Models.WebPageManager.WebPage;
+import Models.WebPageManagerP.WebPageManager;
+import Models.WebPageManagerP.WebPageConstants;
+import Models.WebPageManagerP.WebPage;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;

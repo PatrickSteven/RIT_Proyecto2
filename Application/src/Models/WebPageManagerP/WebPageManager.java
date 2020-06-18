@@ -1,5 +1,5 @@
 
-package Models.WebPageManager;
+package Models.WebPageManagerP;
 import static Models.FileManager.FileManager.readFile;
 import java.nio.file.*;; 
 import java.io.File;
@@ -41,6 +41,7 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.WordlistLoader; 
 import org.apache.lucene.analysis.standard.StandardTokenizer; 
 import org.apache.lucene.util.AttributeFactory;
+import org.tartarus.snowball.ext.SpanishStemmer;
 
 
 public class WebPageManager {
@@ -111,6 +112,20 @@ public class WebPageManager {
         return cleanText;
     }
     
+    public String stemThis(String text){
+        
+        SpanishStemmer spanish = new SpanishStemmer();
+        String[] words = text.split("\\s");
+        String stemmedText = "";
+        for (String word : words) {
+            spanish.setCurrent(word);
+            spanish.stem();
+            stemmedText += spanish.getCurrent() + " ";
+        }
+        
+        return stemmedText;
+    }
+    
     public ArrayList<WebPage> parse(ArrayList<HtmlDocument> htmlTexts, String dataPath){
         
         String title;
@@ -154,10 +169,12 @@ public class WebPageManager {
             body = removeNumbers(body);
             body = makeItSpanish(body);
             body = removeStopWords(body);
+            body = stemThis(body);
 
             hText = removeNumbers(hText);
             hText = makeItSpanish(hText);
             hText = removeStopWords(hText);
+            hText = stemThis(hText);
 
             title = removeNumbers(title);
             title = makeItSpanish(title);
@@ -175,7 +192,7 @@ public class WebPageManager {
             
             int startHTML = html.getInitialPosition();
             int endHTML = html.getEndPosition();
-
+            //System.out.println(dataPath);
             webPageList.add(new WebPage(body, aText, hText, title, "Hola", startHTML, endHTML, dataPath));     
         }
         

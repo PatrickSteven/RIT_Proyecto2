@@ -15,11 +15,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.queryparser.classic.ParseException;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 
 public class SearcherController {
     Searcher searcher;
@@ -32,7 +37,7 @@ public class SearcherController {
     int page;
     int maxPages;
     
-    String htmlFilePath = "../Data/Html/openDoc.html";
+    String htmlFilePath = "Data/Html/openDoc.html";
     
     
     public SearcherController(SearchView view) {
@@ -70,30 +75,25 @@ public class SearcherController {
         return documents_20.split("\n");
     }
     
-    public void openDocument(int docPosition){
-        try {
-            String html = getDocument(docPosition);
-            FileManager.writeObject(html, htmlFilePath);
+    public void openDocument(int docPosition) throws IOException{
+        String html = getDocument(docPosition);
+        FileManager.writeObject(html, htmlFilePath);
+        Path path = Paths.get(htmlFilePath);
+        String htmlDir = path.toAbsolutePath().toString();
+        File htmlFile = new File(htmlDir);
+        Desktop.getDesktop().browse(htmlFile.toURI());
+        System.out.println(htmlDir);
             
-            URI uri = new URL(htmlFilePath).toURI();
-            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
-                desktop.browse(uri);
-            
-        } catch (IOException ex) {
-            Logger.getLogger(SearcherController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(SearcherController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public String getDocument(int docPosition) throws IOException{
-        //int docIndex = documentsForPage*page - documentsForPage+1 - docPosition;
-        int docIndex = (docPosition*page);
+        
+        int docIndex = (documentsForPage*page) - (documentsForPage+1 - (docPosition+1));
+        System.out.println("DocIndex: " + docIndex);
+        System.out.println("Page: " + page + "  Position: " + docPosition);
+        //int docIndex = (docPosition*page);
         Document doc = this.documents.get(docIndex);
-        System.out.println("Document: "+doc.getField(WebPageConstants.TITULO).stringValue());
-         System.out.println("Collection: "+doc.getField(WebPageConstants.COLLECTION).stringValue());
-        System.out.println("DocINdex: "+ docIndex);
+        System.out.println("Title: " + doc.getField(WebPageConstants.TITULO).stringValue());
         return SearchHTMLDocument(doc);
     }
     
@@ -103,7 +103,6 @@ public class SearcherController {
             Integer.valueOf(document.getField(WebPageConstants.INITPOS).stringValue()),
             Integer.valueOf(document.getField(WebPageConstants.ENDPOS).stringValue())
         );
-        
         String html = "";
         for(String line : htmlLines)
             html += line;
@@ -128,6 +127,6 @@ public class SearcherController {
     }
     
     public String getSearchInfo(){
-        return this.searcher.getQueryDocs() + " results" + " in " + searcher.getSearchTime() + "seconds." + "Total documents in index: " + searcher.getTotalDocs();
+        return this.searcher.getQueryDocs() + " results" + " in " + searcher.getSearchTime() + " milliseconds." + " Total documents in index: " + searcher.getTotalDocs();
     }
 }

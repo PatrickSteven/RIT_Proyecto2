@@ -32,7 +32,7 @@ public class Searcher {
     int maxDocs = 100;
     private final Set<String> fieldsToLoad;
     
-    float searchTime;
+    long searchTime;
     long queryDocs;
     long totalDocs;
     
@@ -40,7 +40,6 @@ public class Searcher {
         //Fields that have the documents retrieved
         this.fieldsToLoad = new HashSet<>();
         this.fieldsToLoad.add(WebPageConstants.TITULO);
-        this.fieldsToLoad.add(WebPageConstants.ENLACE);
         this.fieldsToLoad.add(WebPageConstants.COLLECTION);
         this.fieldsToLoad.add(WebPageConstants.INITPOS);
         this.fieldsToLoad.add(WebPageConstants.ENDPOS);
@@ -49,7 +48,7 @@ public class Searcher {
     public ArrayList<Document> Search(String indexDirPath, String queryString) throws IOException, ParseException{
         //START TIME
         
-        float startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         
         //Create a directory of the given path
         Directory indexDirectory = FSDirectory.open(Paths.get(indexDirPath));
@@ -65,11 +64,14 @@ public class Searcher {
             totalDocs = this.indexReader.numDocs();
             maxDocs = (int) totalDocs;
             //ENDTIME 
-            float endTime = System.currentTimeMillis();
-            this.searchTime = endTime - startTime;
             
             //Return result of the query
-            return this.getDocuments(topDocs);
+            ArrayList<Document> docs = this.getDocuments(topDocs);
+             
+            long endTime = System.currentTimeMillis();
+            this.searchTime = endTime - startTime;
+            
+            return docs;
         }
         
         //If the index does not exists
@@ -80,7 +82,8 @@ public class Searcher {
         ArrayList<Document> documents = new ArrayList<>();
         int index = 0;
         for(ScoreDoc scoreDoc : topDocs.scoreDocs){
-            documents.add(indexSearcher.doc(scoreDoc.doc, fieldsToLoad));
+            Document doc = indexSearcher.doc(scoreDoc.doc, fieldsToLoad);
+            documents.add(doc);
             index++;
         }
         System.out.println("Documentes: " + documents.size());
@@ -105,8 +108,8 @@ public class Searcher {
         return queryDocs;
     }
     
-    public float getSearchTime(){
-        return searchTime/100;
+    public long getSearchTime(){
+        return this.searchTime;
     }
     
 }

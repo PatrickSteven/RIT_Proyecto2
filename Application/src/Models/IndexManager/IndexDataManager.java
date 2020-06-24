@@ -10,14 +10,12 @@ import java.util.Set;
 public class IndexDataManager implements Serializable{
     
     private static IndexData indexData;
-    public static final String IndexDataFilePath = "../Data/indexData";
-    public static final String IndexFilePath = "../Data/Index/index_";
+    public static final String IndexDataFilePath = "Data/indexData";
+    public static final String IndexFilePath = "Data/Index/index_";
 
     public IndexDataManager() {
         LoadIndexData();
     }
-    
-    
     
     public class IndexData implements Serializable{
 

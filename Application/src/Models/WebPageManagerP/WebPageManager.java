@@ -76,7 +76,6 @@ public class WebPageManager {
     //Return the Html Documents of a txt file
     //The HTML begins with <!DOCTYPE... and ends with </html>
     public ArrayList<HtmlDocument> getHTMLDocuments(String filename) throws IOException{
-        System.out.println("Getting documens from txt");
         ArrayList<HtmlDocument> htmlDocuments = new ArrayList<>();
         String data = readFile(filename);
         String[] dataLines = data.split("\n");
@@ -97,7 +96,6 @@ public class WebPageManager {
             
             linePosition++;
         }
-        System.out.println("Finished");
         return htmlDocuments;
     }
     
@@ -136,7 +134,6 @@ public class WebPageManager {
         ArrayList<WebPage> webPageList = new ArrayList();
         
         for (HtmlDocument html : htmlTexts){
-            System.out.println("Processing Document...");
             doc = Jsoup.parse(html.getHtmlText());
             title = doc.title();
             body = doc.body().text();  
@@ -193,7 +190,7 @@ public class WebPageManager {
             int startHTML = html.getInitialPosition();
             int endHTML = html.getEndPosition();
             //System.out.println(dataPath);
-            webPageList.add(new WebPage(body, aText, hText, title, "Hola", startHTML, endHTML, dataPath));     
+            webPageList.add(new WebPage(body, aText, hText, title, startHTML, endHTML, dataPath));     
         }
         
         return webPageList;

@@ -87,15 +87,15 @@ public class Indexer {
             doc.add(new TextField(WebPageConstants.TITULO, webPage.getTitulo(), Field.Store.YES));
 
             //Fields that are a single string, one token. No Store
-            doc.add(new StringField(WebPageConstants.ENLACE, webPage.getEnlace(), Field.Store.NO));
+            //doc.add(new StringField(WebPageConstants.ENLACE, webPage.getEnlace(), Field.Store.NO));
             
             //Collection of the documet, Path.
-            doc.add(new StringField(WebPageConstants.COLLECTION, webPage.getCollection(), Field.Store.NO));
+            doc.add(new StringField(WebPageConstants.COLLECTION, webPage.getCollection(), Field.Store.YES));
             
             //Initial and end position of the Document in the Collection .txt file
             //Int to String
-            doc.add(new StringField(WebPageConstants.INITPOS, String.valueOf(webPage.getInitialPosition()), Field.Store.NO));
-            doc.add(new StringField(WebPageConstants.ENDPOS,  String.valueOf(webPage.getEndPosition()), Field.Store.NO));
+            doc.add(new StringField(WebPageConstants.INITPOS, String.valueOf(webPage.getInitialPosition()), Field.Store.YES));
+            doc.add(new StringField(WebPageConstants.ENDPOS,  String.valueOf(webPage.getEndPosition()), Field.Store.YES));
             
             //Add the document in the index
                this.indexWriter.addDocument(doc);
@@ -104,7 +104,7 @@ public class Indexer {
     }
 
     public float getTime() {
-        return time / 100;
+        return time / 1000;
     }
 
     public int getCuantityDocuments() {

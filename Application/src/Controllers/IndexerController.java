@@ -55,6 +55,8 @@ public class IndexerController {
     }
     
     public void updateIndex(String nameIndex, String collectionPath) throws IOException{
+        IndexDataManager.getIndexData();
+        System.out.println("No Indice DataManger");
         if(IndexDataManager.getIndexData().indexCollections.get(nameIndex).contains(collectionPath)){
             view.setTextUpdateMsgLabel("Collection is already indexed in " + nameIndex);
         }
@@ -94,7 +96,7 @@ public class IndexerController {
     }
     
     public String getIndexingInfo(){
-        return this.indexer.getCuantityDocuments() + " indexed documents in " + this.indexer.getTime() + " ms" + ".Total: " + this.indexer.getNumDocs(); 
+        return this.indexer.getCuantityDocuments() + " indexed documents in " + this.indexer.getTime() + " seconds" + ". Total: " + this.indexer.getNumDocs(); 
     }
     
     

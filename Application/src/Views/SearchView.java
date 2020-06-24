@@ -286,7 +286,11 @@ public class SearchView extends javax.swing.JFrame {
     }//GEN-LAST:event_nextPageBtnActionPerformed
 
     private void openDocBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDocBtnActionPerformed
-        this.controller.openDocument(this.documentsList.getSelectedIndex());
+        try {
+            this.controller.openDocument(this.documentsList.getSelectedIndex());
+        } catch (IOException ex) {
+            Logger.getLogger(SearchView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_openDocBtnActionPerformed
 
     /**

@@ -28,7 +28,11 @@ import org.jsoup.select.Elements;
 public class Application {
 
     public static void main(String[] args) throws IOException{    
-      
+        
+        IndexView indexView = new IndexView();
+        SearchView searchView = new SearchView();
+        indexView.setVisible(true);
+        searchView.setVisible(true);
 
     }        
 }

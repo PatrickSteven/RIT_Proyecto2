@@ -25,8 +25,10 @@ import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.queryparser.classic.ParseException;
 import java.nio.file.Paths;
 import java.nio.file.Path;
+import Models.IndexManager.IndexDataManager;
 
-public class SearcherController {
+
+public class SearcherController implements IController {
     Searcher searcher;
     WebPageManager webPageManager;
     SearchView view;
@@ -45,6 +47,7 @@ public class SearcherController {
         webPageManager = new WebPageManager();
         this.view = view;
         this.documentsForPage = 20;
+        IndexDataManager.addController(this);
     }
     
     public void Search(String nameIndex, String query) throws IOException{
@@ -128,5 +131,10 @@ public class SearcherController {
     
     public String getSearchInfo(){
         return this.searcher.getQueryDocs() + " results" + " in " + searcher.getSearchTime() + " milliseconds." + " Total documents in index: " + searcher.getTotalDocs();
+    }
+
+    @Override
+    public void updateIndexCollection(String[] indexes) {
+        this.view.updateIndexCollections(indexes);
     }
 }

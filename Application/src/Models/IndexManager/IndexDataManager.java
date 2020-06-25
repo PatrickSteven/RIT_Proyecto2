@@ -1,6 +1,7 @@
 
 package Models.IndexManager;
 
+import Controllers.IController;
 import Models.FileManager.FileManager;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Set;
 public class IndexDataManager implements Serializable{
     
     private static IndexData indexData;
+    public static ArrayList<IController> controllers  = new ArrayList<>();
     public static final String IndexDataFilePath = "Data/indexData";
     public static final String IndexFilePath = "Data/Index/index_";
 
@@ -36,13 +38,35 @@ public class IndexDataManager implements Serializable{
         public String[] getIndexes(){
             Set<String> indexesNames = indexCollections.keySet();
             String allKeys = "";
-            for(String name : indexesNames) allKeys += name;
+            System.out.println("Collection: ");
+            for(String name : indexesNames){
+                System.out.println(name);
+                allKeys += name + " ";
+            }
             return allKeys.split(" ");
         }
+       
     }
+   
+    // Controllers that access Index Data
+   public static void addController(IController controller){
+       IndexDataManager.controllers.add(controller);
+       controller.updateIndexCollection(IndexDataManager.getIndexData().getIndexes());
+   }
+   
+   public void updateIndexes(){
+       String[] newCollection = IndexDataManager.getIndexData().getIndexes();
+       for(IController controller : IndexDataManager.controllers){
+           controller.updateIndexCollection(newCollection);
+       }
+   }
+    
+    
+    //Serializable Index Data
     
     public void Save(){
         this.SaveIndexData();
+        this.updateIndexes();
     }
     
     public static IndexData getIndexData(){

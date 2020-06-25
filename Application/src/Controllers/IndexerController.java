@@ -10,23 +10,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
 
-public class IndexerController {
+public class IndexerController implements IController{
     
     private IndexDataManager indexDataManager;
     private Indexer indexer;  
 
     private IndexView view;
     
-    public IndexerController(){
-        this.indexDataManager = new IndexDataManager();
-        this.indexer = new Indexer();
-
-    }
-
     public IndexerController(IndexView view) {
-        this.indexDataManager = new IndexDataManager();
         this.view = view;
         this.indexer = new Indexer();
+        this.indexDataManager = new IndexDataManager();
+        IndexDataManager.addController(this);
+
     }
       
     public void createIndex(String nameIndex, String collectionPath) throws IOException{
@@ -55,8 +51,7 @@ public class IndexerController {
     }
     
     public void updateIndex(String nameIndex, String collectionPath) throws IOException{
-        IndexDataManager.getIndexData();
-        System.out.println("No Indice DataManger");
+
         if(IndexDataManager.getIndexData().indexCollections.get(nameIndex).contains(collectionPath)){
             view.setTextUpdateMsgLabel("Collection is already indexed in " + nameIndex);
         }
@@ -98,7 +93,9 @@ public class IndexerController {
     public String getIndexingInfo(){
         return this.indexer.getCuantityDocuments() + " indexed documents in " + this.indexer.getTime() + " seconds" + ". Total: " + this.indexer.getNumDocs(); 
     }
-    
-    
-    
+
+    @Override
+    public void updateIndexCollection(String[] indexes) {
+        this.view.updateIndexCollections(indexes);
+    }
 }

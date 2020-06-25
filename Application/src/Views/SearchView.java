@@ -10,6 +10,7 @@ import Models.IndexManager.IndexDataManager;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -23,12 +24,15 @@ public class SearchView extends javax.swing.JFrame {
 
     SearcherController controller;  
     DefaultListModel<String> documents;
+    private String[] indexCollections;
+    private DefaultComboBoxModel indexCollectionModel;
     
     public SearchView() {
         this.controller = new SearcherController(this);  
-        this.documents = new DefaultListModel<String>();
+        this.documents = new DefaultListModel<>();
         initComponents();
         this.documentsList.setModel(this.documents);
+        
     }
 
 
@@ -54,7 +58,8 @@ public class SearchView extends javax.swing.JFrame {
         searchMsgLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(720, 720));
+        setPreferredSize(new java.awt.Dimension(620, 675));
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -163,7 +168,7 @@ public class SearchView extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Index");
 
-        IndexNameField.setModel(new javax.swing.DefaultComboBoxModel(IndexDataManager.getIndexData().getIndexes()));
+        IndexNameField.setModel(this.indexCollectionModel);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -247,6 +252,15 @@ public class SearchView extends javax.swing.JFrame {
         for(String doc : newDocuments){
             this.documents.addElement(doc);
         }
+    }
+    
+    public void updateIndexCollections(String[] indexes){
+        this.indexCollections = indexes;
+        if(this.indexCollectionModel == null) 
+            this.indexCollectionModel = new DefaultComboBoxModel(this.indexCollections);
+        this.indexCollectionModel.removeAllElements();
+        for(String index : indexes)
+            this.indexCollectionModel.addElement(index);
     }
     
     public void setSearchInfo(String text){

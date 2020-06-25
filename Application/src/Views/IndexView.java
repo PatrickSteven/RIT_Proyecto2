@@ -10,6 +10,7 @@ import Models.IndexManager.IndexDataManager;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 
 
 public class IndexView extends javax.swing.JFrame {
@@ -18,12 +19,15 @@ public class IndexView extends javax.swing.JFrame {
     private final JFileChooser openFileChooser;
     private String updateCollectionPath = "";
     private String createCollectionPath = "";
+    private String[] indexCollections;
+    private DefaultComboBoxModel indexCollectionModel;
     
     
     
     public IndexView() {
         this.controller = new IndexerController(this);
-        
+        //Index combo Box
+        this.indexCollections = IndexDataManager.getIndexData().getIndexes();
         //File chooser
         this.openFileChooser = new JFileChooser();
         this.openFileChooser.setCurrentDirectory(new File(" "));
@@ -228,7 +232,7 @@ public class IndexView extends javax.swing.JFrame {
         updateMsgLabel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         updateMsgLabel.setForeground(new java.awt.Color(153, 0, 0));
 
-        updateIndexName.setModel(new javax.swing.DefaultComboBoxModel(IndexDataManager.getIndexData().getIndexes()));
+        updateIndexName.setModel(this.indexCollectionModel);
 
         javax.swing.GroupLayout updateIndexPanelLayout = new javax.swing.GroupLayout(updateIndexPanel);
         updateIndexPanel.setLayout(updateIndexPanelLayout);
@@ -341,6 +345,15 @@ public class IndexView extends javax.swing.JFrame {
     
     public void cleanIndexingInfoArea(){
         this.indexingInfoArea.setText("");
+    }
+    
+    public void updateIndexCollections(String[] indexes){
+        this.indexCollections = indexes;
+        if(this.indexCollectionModel == null) 
+            this.indexCollectionModel = new DefaultComboBoxModel(this.indexCollections);
+        this.indexCollectionModel.removeAllElements();
+        for(String index : indexes)
+            this.indexCollectionModel.addElement(index);
     }
     
     private void openFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileBtnActionPerformed
@@ -473,4 +486,5 @@ public class IndexView extends javax.swing.JFrame {
     private javax.swing.JLabel updateMsgLabel;
     private javax.swing.JButton updateOpenFileBtn;
     // End of variables declaration//GEN-END:variables
+
 }

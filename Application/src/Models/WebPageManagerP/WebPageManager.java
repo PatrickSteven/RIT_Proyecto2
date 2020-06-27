@@ -1,56 +1,53 @@
 
 package Models.WebPageManagerP;
 import static Models.FileManager.FileManager.readFile;
-import java.nio.file.*;; 
-import java.io.File;
-import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.io.IOException; 
-import java.io.Reader; 
-import java.util.HashSet; 
+import java.util.HashMap;
 import java.util.Set; 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import org.apache.lucene.analysis.Analyzer; 
-import org.apache.lucene.analysis.LowerCaseFilter; 
-import org.apache.lucene.analysis.StopFilter; 
-import org.apache.lucene.analysis.TokenStream; 
-import org.apache.lucene.analysis.WordlistLoader; 
-import org.apache.lucene.analysis.core.StopAnalyzer;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
-import org.apache.lucene.util.Version;
-import org.apache.lucene.analysis.CharArraySet;
-import org.apache.lucene.util.Constants;
-import org.apache.lucene.analysis.util.ResourceLoader;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.util.AttributeImpl;
-import org.apache.lucene.analysis.Analyzer; 
-import org.apache.lucene.analysis.LowerCaseFilter; 
-import org.apache.lucene.analysis.StopFilter; 
-import org.apache.lucene.analysis.TokenStream; 
-import org.apache.lucene.analysis.WordlistLoader; 
-import org.apache.lucene.analysis.standard.StandardTokenizer; 
-import org.apache.lucene.util.AttributeFactory;
 import org.tartarus.snowball.ext.SpanishStemmer;
 
 
 public class WebPageManager {
       
     private Set<String> stopWords;
+    HashMap<Character, Character> replacements;
+
+    //Time
+    long timeJsoup =0;
+    long timeLoweCase = 0;
+    long timeRemoveNumbers = 0;
+    long timeRemoveStopWords = 0;
+    long timeMakeItSpanish = 0;
+    long timeStemThis = 0;
+    long timeReplaceAcents = 0;
+    
     Document doc;
+
+    public WebPageManager() {
+        replacements = new HashMap<Character, Character>();
+        replacements.put('á', 'a');
+        replacements.put('é', 'e');
+        replacements.put('í', 'i');
+        replacements.put('ó','o');
+        replacements.put('ú', 'u');
+        replacements.put('.', ' ');
+        replacements.put(',', ' ');
+        replacements.put(':', ' ');
+        replacements.put('(', ' ');
+        replacements.put(')', ' ');
+        
+    }
+    
+    
     
     public ArrayList<WebPage> getWebPages(String dataFile) throws IOException{
-         
         ArrayList<HtmlDocument> htmlTexts = getHTMLDocuments(dataFile);
         return parse(htmlTexts, dataFile);
     }
@@ -76,6 +73,8 @@ public class WebPageManager {
     //Return the Html Documents of a txt file
     //The HTML begins with <!DOCTYPE... and ends with </html>
     public ArrayList<HtmlDocument> getHTMLDocuments(String filename) throws IOException{
+        long startTime = System.currentTimeMillis();
+
         ArrayList<HtmlDocument> htmlDocuments = new ArrayList<>();
         String data = readFile(filename);
         String[] dataLines = data.split("\n");
@@ -96,32 +95,36 @@ public class WebPageManager {
             
             linePosition++;
         }
+        
+        long endTime = System.currentTimeMillis();
+        System.out.println("GetHTMLDocuments _ Time: " + (endTime-startTime));
+        
         return htmlDocuments;
     }
     
     public String removeStopWords(String text){
-        String cleanText = "";
+        StringBuilder cleanText = new StringBuilder();
         Set<String> stopwords = Stopwords.LoadStopWords();
         String[] words = text.split(" ");
         for(String word : words){
             if(!stopwords.contains(word))
-                cleanText += word + " ";
+                cleanText.append(word).append(" ");
         }
-        return cleanText;
+        return cleanText.toString();
     }
     
     public String stemThis(String text){
         
         SpanishStemmer spanish = new SpanishStemmer();
         String[] words = text.split("\\s");
-        String stemmedText = "";
+        StringBuilder stemmedText = new StringBuilder();
         for (String word : words) {
             spanish.setCurrent(word);
             spanish.stem();
-            stemmedText += spanish.getCurrent() + " ";
+            stemmedText.append(spanish.getCurrent()).append(" ");
         }
         
-        return stemmedText;
+        return stemmedText.toString();
     }
     
     public ArrayList<WebPage> parse(ArrayList<HtmlDocument> htmlTexts, String dataPath){
@@ -131,30 +134,47 @@ public class WebPageManager {
         String newBody;
         String aText = "";
         String hText = "";
+        
         ArrayList<WebPage> webPageList = new ArrayList();
         
         for (HtmlDocument html : htmlTexts){
+            //Time
+            long startTime, endTime;
+            
+            //Get Html 
+            startTime = System.currentTimeMillis();
+
             doc = Jsoup.parse(html.getHtmlText());
             title = doc.title();
             body = doc.body().text();  
             
             //Get ref <a>
+            StringBuilder aTagsBuilder = new StringBuilder();
             Elements aTags = doc.body().select("a");
             for (Element element : aTags){
-                aText += (element.ownText() + " ");
+                aTagsBuilder.append(element.ownText()).append(" ");
             }
+            aText = aTagsBuilder.toString();
             
             //Get subtitles <h#>
+            StringBuilder hTagsBuilder = new StringBuilder();
             Elements hTags = doc.select("h1, h2, h3, h4, h5, h6");      
             for (Element element : hTags){
-              hText += (element.ownText() + " ");
+              hTagsBuilder.append(element.ownText()).append(" ");
             }
-            
-            
+            hText = hTagsBuilder.toString();
+            endTime = System.currentTimeMillis();
+            this.timeJsoup += (endTime-startTime);
+             
+           
+            //ToLowerCase
+            startTime = System.currentTimeMillis();
             title = title.toLowerCase();
             aText = aText.toLowerCase();
             hText = hText.toLowerCase();
             body = body.toLowerCase();
+            endTime = System.currentTimeMillis();
+            this.timeLoweCase += (endTime-startTime);
             
             /*
             System.out.println("title " + title);
@@ -162,23 +182,27 @@ public class WebPageManager {
             System.out.println("h " + hText);
             System.out.println("body " + body + "\n");
             */
+           
             
-            body = removeNumbers(body);
-            body = makeItSpanish(body);
-            body = removeStopWords(body);
-            body = stemThis(body);
-
-            hText = removeNumbers(hText);
             hText = makeItSpanish(hText);
-            hText = removeStopWords(hText);
-            hText = stemThis(hText);
-
-            title = removeNumbers(title);
+            body = makeItSpanish(body);
             title = makeItSpanish(title);
-
-            aText = removeNumbers(aText);
             aText = makeItSpanish(aText);
+
             
+            startTime = System.currentTimeMillis();
+            body = removeStopWords(body);
+            hText = removeStopWords(hText);
+            endTime = System.currentTimeMillis();
+            this.timeRemoveStopWords += (endTime-startTime);
+            
+            startTime = System.currentTimeMillis();
+            hText = stemThis(hText);
+            body = stemThis(body);
+            endTime = System.currentTimeMillis();
+            this.timeStemThis += (endTime-startTime);
+
+
             /*
             System.out.println("title LIMPIO " + title);
             System.out.println("a LIMPIO " + aText);
@@ -193,41 +217,37 @@ public class WebPageManager {
             webPageList.add(new WebPage(body, aText, hText, title, startHTML, endHTML, dataPath));     
         }
         
+        System.out.println("Jsoup _Time: " + this.timeJsoup);
+        System.out.println("ToLowerCase _Time: " + this.timeLoweCase);
+        System.out.println("RemoveNumbers _Time: " + this.timeRemoveNumbers);
+        System.out.println("Replaceacents _Time: " + this.timeReplaceAcents);
+        System.out.println("MakeItSpanish _Time: " + this.timeMakeItSpanish);
+        System.out.println("RemoveStopWords _Time: " + this.timeRemoveStopWords);
+        System.out.println("StemThis _Time: " + this.timeStemThis);
+                
         return webPageList;
         
     }
     
-    public String removeNumbers(String text){
     
-        String[] newText = text.replaceAll("\\w*\\d\\w*", " ").split("  +");
-        String cleanText = String.join(" ", newText);
-        
-        return cleanText;
+    public void replaceAccents(StringBuilder cadena) {
+        for(int i=0; i<cadena.length();i++ ){
+            if(replacements.containsKey(cadena.charAt(i)))
+                cadena.setCharAt(i, replacements.get(cadena.charAt(i)));
+        }
     }
     
-    public String replaceAccents(String cadena) {
-    return cadena.replace("Á", "A")
-            .replace("É", "E")
-            .replace("Í", "I")
-            .replace("Ó", "O") 
-            .replace("Ú", "U")
-            .replace("á", "a")
-            .replace("é", "e")
-            .replace("í", "i")
-            .replace("ó", "o")
-            .replace("ú", "u")
-            .replace(".", " ")
-            .replace(",", " ")
-            .replace(":", " ")
-            .replace("(", " ")
-            .replace(")", " ");
-}
-    
     public String makeItSpanish(String text){
-    
-        text = replaceAccents(text);
-        String[] newText = text.replaceAll("\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|[^A-Za-zÑñ\\s]+[A-Za-zÑñ]*\\b|\\b[A-Za-zÑñ]*[^A-Za-zÑñ\\s]+|[^A-Za-zÑñ\\s]+", " ").split("  +  ");
-        String cleanText = String.join(" ", newText);
+        StringBuilder newText = new StringBuilder(text);
+        long startTime = System.currentTimeMillis();
+        replaceAccents(newText);
+        long endTime = System.currentTimeMillis();
+        this.timeReplaceAcents += endTime - startTime;
+        
+        startTime = System.currentTimeMillis();
+        String cleanText = Pattern.compile("(\\w*[^a-zñ|\\s]+\\w*)").matcher(newText).replaceAll("") + " ";  
+        endTime = System.currentTimeMillis();
+        this.timeMakeItSpanish += (endTime-startTime);
         
         return cleanText;
     }

@@ -2,29 +2,19 @@ package Models.IndexManager;
 import Models.WebPageManagerP.WebPageManager;
 import Models.WebPageManagerP.WebPageConstants;
 import Models.WebPageManagerP.WebPage;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexableField;
-import org.apache.lucene.index.IndexableFieldType;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
 public class Indexer {
     IndexWriter indexWriter;
@@ -33,6 +23,7 @@ public class Indexer {
     float time;
     int cuantityDocuments;
     int numDocs;
+    
     
     public Indexer(){
         this.webPageManager = new WebPageManager();
@@ -56,7 +47,7 @@ public class Indexer {
         
         //Add documents
         int documents = this.addDocuments(dataDirPath);
-        
+        this.indexWriter.commit();
         //Close Index
         this.close();
         
@@ -65,6 +56,7 @@ public class Indexer {
         
         //Add Time result
         this.time = endTime - startTime;
+        System.out.println("Total Indexing _Time: " + this.time);
         //Cuantity of indexed documents
         this.cuantityDocuments = documents;
        
@@ -76,6 +68,8 @@ public class Indexer {
         webPages = this.webPageManager.getWebPages(dataDirPath);
       
         //Iterate the arrayList and add the documents to the index
+        long startTime = System.currentTimeMillis();
+
         for(WebPage webPage : webPages){
             //Document that is going to be indexed
             Document doc = new Document();
@@ -98,8 +92,13 @@ public class Indexer {
             doc.add(new StringField(WebPageConstants.ENDPOS,  String.valueOf(webPage.getEndPosition()), Field.Store.YES));
             
             //Add the document in the index
-               this.indexWriter.addDocument(doc);
+            this.indexWriter.addDocument(doc);
+            
         }
+        
+        long endTime = System.currentTimeMillis();
+        System.out.println("Indexing Documents _Time: " + (endTime - startTime));
+        
         return webPages.size();
     }
 

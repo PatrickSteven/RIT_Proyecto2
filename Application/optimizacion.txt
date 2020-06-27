@@ -1,0 +1,83 @@
+1- aText y hText son StringBuilder.
+
+GetHTMLDocuments _ Time: 606
+Jsoup _Time: 5285
+ToLowerCase _Time: 4079
+RemoveNumbers _Time: 87588
+MakeItSpanish _Time: 229540
+RemoveStopWords _Time: 1746
+StemThis _Time: 5289
+Indexing Documents _Time: 43460
+Total Indexing _Time: 408742.0
+
+2- quité los StringBuilder para aText y htext. I DONT UNDESTAND
+GetHTMLDocuments _ Time: 570
+Jsoup _Time: 59396
+ToLowerCase _Time: 2605
+RemoveNumbers _Time: 56873
+MakeItSpanish _Time: 189527
+RemoveStopWords _Time: 1409
+StemThis _Time: 4239
+Indexing Documents _Time: 45401
+Total Indexing _Time: 383254.0
+
+3 - Optimizar Regex y usandola tambien para eliminar los numeros
+GetHTMLDocuments _ Time: 599
+Jsoup _Time: 57270
+ToLowerCase _Time: 2574
+RemoveNumbers _Time: 0
+MakeItSpanish _Time: 142939
+RemoveStopWords _Time: 1340
+StemThis _Time: 4452
+Indexing Documents _Time: 43280
+Total Indexing _Time: 272531.0
+
+4- 
+GetHTMLDocuments _ Time: 1077
+Jsoup _Time: 64573
+ToLowerCase _Time: 2978
+RemoveNumbers _Time: 0
+Replaceacents _Time: 62907
+MakeItSpanish _Time: 102774
+RemoveStopWords _Time: 1547
+StemThis _Time: 5217
+Indexing Documents _Time: 53512
+Total Indexing _Time: 327642.0
+
+
+5- StringBuilder en MakeItSpanish
+GetHTMLDocuments _ Time: 747
+Jsoup _Time: 68189
+ToLowerCase _Time: 3070
+RemoveNumbers _Time: 0
+Replaceacents _Time: 66032
+MakeItSpanish _Time: 76486
+RemoveStopWords _Time: 1635
+StemThis _Time: 5409
+Indexing Documents _Time: 47692
+Total Indexing _Time: 293216.0
+
+6-Fuck replacements - Se cambio el metodo replaceAcents.
+GetHTMLDocuments _ Time: 662
+Jsoup _Time: 64971
+ToLowerCase _Time: 2804
+RemoveNumbers _Time: 0
+Replaceacents _Time: 5978
+MakeItSpanish _Time: 69642
+RemoveStopWords _Time: 1564
+StemThis _Time: 5089
+Indexing Documents _Time: 58467
+Total Indexing _Time: 250567.0
+
+7-Se usaron StringBuilder para agreagar los elementos <a> y <h?> Eso redujo la mayor cantidad de tiempo.
+GetHTMLDocuments _ Time: 431
+Jsoup _Time: 8303
+ToLowerCase _Time: 73
+RemoveNumbers _Time: 0
+Replaceacents _Time: 145
+MakeItSpanish _Time: 1504
+RemoveStopWords _Time: 1447
+StemThis _Time: 811
+Indexing Documents _Time: 433
+Total Indexing _Time: 6459.0
+

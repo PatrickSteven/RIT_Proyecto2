@@ -38,9 +38,7 @@ public class IndexDataManager implements Serializable{
         public String[] getIndexes(){
             Set<String> indexesNames = indexCollections.keySet();
             String allKeys = "";
-            System.out.println("Collection: ");
             for(String name : indexesNames){
-                System.out.println(name);
                 allKeys += name + " ";
             }
             return allKeys.split(" ");

@@ -91,7 +91,7 @@ public class IndexerController implements IController{
     }
     
     public String getIndexingInfo(){
-        return this.indexer.getCuantityDocuments() + " indexed documents in " + this.indexer.getTime() + " seconds" + ". Total: " + this.indexer.getNumDocs(); 
+        return this.indexer.getCuantityDocuments() + " indexed documents in " + this.indexer.getTime() + " seconds"; 
     }
 
     @Override

@@ -375,15 +375,18 @@ public class IndexView extends javax.swing.JFrame {
             this.createMsgLabel.setText("No file choosen...");
         }
         else{
-            try {
-                
-                controller.createIndex(this.indexNameField.getText(), createCollectionPath);
+            //try {
+                controller.getHiloIndexador().setIndexName(this.indexNameField.getText());
+                controller.getHiloIndexador().setCollectionPath(createCollectionPath);
+                controller.getHiloIndexador().setUpdating(false);
+                controller.getHiloIndexador().startIndexing();
+                //controller.createIndex(this.indexNameField.getText(), createCollectionPath);
 
                 
-            } catch (IOException ex) {
-                this.indexingInfoArea.setText("Error al indexar: " + ex.getMessage());
-                Logger.getLogger(IndexView.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            //} catch (IOException ex) {
+               // this.indexingInfoArea.setText("Error al indexar: " + ex.getMessage());
+                //Logger.getLogger(IndexView.class.getName()).log(Level.SEVERE, null, ex);
+            //}
         }
     }//GEN-LAST:event_createIndexBtnActionPerformed
 
@@ -401,19 +404,23 @@ public class IndexView extends javax.swing.JFrame {
     private void UpdateIndexBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateIndexBtnActionPerformed
         String indexName = this.updateIndexName.getSelectedItem().toString();
         if(indexName.isEmpty()){
-            this.updateMsgLabel.setText("Select a index");
+            this.updateMsgLabel.setText("Select an index");
         }
         else if(this.updateCollectionPath.isEmpty()){
             this.updateMsgLabel.setText("No file choosen...");
         }
         else{
-            try {
-                controller.updateIndex(indexName, updateCollectionPath);
+            //try {
+                controller.getHiloIndexador().setIndexName(indexName);
+                controller.getHiloIndexador().setCollectionPath(updateCollectionPath);
+                controller.getHiloIndexador().setUpdating(true);
+                controller.getHiloIndexador().startIndexing();
+                //controller.updateIndex(indexName, updateCollectionPath);
                                 
-            } catch (IOException ex) {
-                this.indexingInfoArea.setText("Error al indexar: " + ex.getMessage());
-                Logger.getLogger(IndexView.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            //} catch (IOException ex) {
+                //this.indexingInfoArea.setText("Error al indexar: " + ex.getMessage());
+                //Logger.getLogger(IndexView.class.getName()).log(Level.SEVERE, null, ex);
+            //}
         }
     }//GEN-LAST:event_UpdateIndexBtnActionPerformed
 

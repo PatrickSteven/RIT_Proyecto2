@@ -14,10 +14,12 @@ public class IndexerController implements IController{
     
     private IndexDataManager indexDataManager;
     private Indexer indexer;  
-
+    private IndexerThread hiloIndexador;
     private IndexView view;
     
     public IndexerController(IndexView view) {
+        this.hiloIndexador = new IndexerThread(this);
+        hiloIndexador.start();
         this.view = view;
         this.indexer = new Indexer();
         this.indexDataManager = new IndexDataManager();
@@ -97,5 +99,9 @@ public class IndexerController implements IController{
     @Override
     public void updateIndexCollection(String[] indexes) {
         this.view.updateIndexCollections(indexes);
+    }
+
+    public IndexerThread getHiloIndexador() {
+        return hiloIndexador;
     }
 }
